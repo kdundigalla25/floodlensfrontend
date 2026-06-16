@@ -1,5 +1,5 @@
-import { Camera, Upload, Waves } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { Camera, Waves } from "lucide-react";
+import { motion } from "framer-motion";
 
 export type StepNumber = "01" | "02" | "03";
 
@@ -10,114 +10,111 @@ type StepCardProps = {
   text: string;
 };
 
-const config: Record<
+const variants: Record<
   StepNumber,
-  { iconRing: string; accent: string; bar: string }
+  {
+    bg: string;
+    iconBg: string;
+    accent: string;
+    image: string;
+  }
 > = {
   "01": {
-    iconRing: "bg-cyan-300/12 text-cyan-300",
-    accent: "from-cyan-400/10 via-transparent to-transparent",
-    bar: "bg-cyan-300",
+    bg: "from-cyan-300/20 via-sky-500/10 to-[#0E1B2C]",
+    iconBg: "bg-cyan-300 text-slate-950",
+    accent: "bg-cyan-300",
+    image: "Address",
   },
   "02": {
-    iconRing: "bg-blue-400/12 text-blue-300",
-    accent: "from-blue-500/10 via-transparent to-transparent",
-    bar: "bg-blue-400",
+    bg: "from-blue-500/20 via-indigo-500/10 to-[#0E1B2C]",
+    iconBg: "bg-blue-400 text-white",
+    accent: "bg-blue-400",
+    image: "Fallback",
   },
   "03": {
-    iconRing: "bg-indigo-400/12 text-indigo-300",
-    accent: "from-indigo-500/10 via-transparent to-transparent",
-    bar: "bg-indigo-400",
+    bg: "from-rose-400/20 via-orange-400/10 to-[#0E1B2C]",
+    iconBg: "bg-rose-300 text-slate-950",
+    accent: "bg-rose-300",
+    image: "Preview",
   },
 };
 
 export function StepCard({ icon, number, title, text }: StepCardProps) {
-  const c = config[number];
-  const prefersReduced = useReducedMotion();
+  const variant = variants[number];
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 28 }}
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      whileHover={prefersReduced ? {} : { y: -8 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-      className={`group relative overflow-hidden rounded-3xl border border-white/8 bg-[#0d1a2a] bg-linear-to-br ${c.accent} p-7 shadow-2xl`}
+      whileHover={{
+        y: -10,
+        rotate: number === "02" ? 0 : number === "01" ? -1 : 1,
+      }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.5 }}
+      className={`group relative min-h-105 overflow-hidden rounded-[2.25rem] border border-white/10 bg-linear-to-br ${variant.bg} p-6 shadow-2xl`}
     >
-      {/* Corner radial highlight */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.035),transparent_55%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.16),transparent_32%)]" />
+      <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full bg-white/10 blur-3xl transition group-hover:bg-white/20" />
 
-      {/* Watermark step number */}
-      <div className="absolute right-5 top-3 select-none text-[5.5rem] font-black leading-none text-white/4">
-        {number}
-      </div>
-
-      {/* Icon badge */}
-      <div className={`mb-7 flex h-12 w-12 items-center justify-center rounded-2xl ${c.iconRing}`}>
-        {icon}
-      </div>
-
-      {/* Visual mockup */}
-      <div className="mb-6 overflow-hidden rounded-2xl border border-white/8 bg-[#060f1a]">
-        <MockVisual number={number} prefersReduced={!!prefersReduced} />
-      </div>
-
-      {/* Text */}
-      <h3 className="text-lg font-black tracking-tight text-white">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-slate-500">{text}</p>
-
-      {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/5">
+      <div className="relative flex items-center justify-between">
         <div
-          className={`h-full ${c.bar} transition-all duration-700 group-hover:w-full`}
+          className={`flex h-16 w-16 items-center justify-center rounded-3xl ${variant.iconBg} shadow-2xl transition group-hover:scale-110`}
+        >
+          {icon}
+        </div>
+
+        <p className="text-7xl font-black leading-none text-white/8">
+          {number}
+        </p>
+      </div>
+
+      <div className="relative mt-10">
+        <div className="mb-5 overflow-hidden rounded-3xl border border-white/10 bg-slate-950/40 p-4">
+          <MockStepVisual number={number} label={variant.image} />
+        </div>
+
+        <h3 className="text-xl font-black tracking-tight text-white">
+          {title}
+        </h3>
+
+        <p className="mt-4 leading-7 text-slate-300">{text}</p>
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
+        <div
+          className={`h-full ${variant.accent} transition-all duration-500 group-hover:w-full`}
           style={{
             width: number === "01" ? "33%" : number === "02" ? "66%" : "100%",
           }}
         />
       </div>
-    </motion.article>
+    </motion.div>
   );
 }
 
-function MockVisual({
+function MockStepVisual({
   number,
-  prefersReduced,
+  label,
 }: {
   number: StepNumber;
-  prefersReduced: boolean;
+  label: string;
 }) {
   if (number === "01") {
     return (
-      <div className="relative h-36 p-4">
-        {/* Address input mockup */}
-        <div className="rounded-xl border border-white/8 bg-white/5 px-4 py-3">
-          <p className="text-[9px] font-black uppercase tracking-wider text-slate-600">
+      <div className="relative h-36 overflow-hidden rounded-2xl bg-linear-to-br from-slate-900 to-slate-800">
+        <div className="absolute left-4 right-4 top-5 rounded-2xl border border-white/10 bg-white/10 px-4 py-3">
+          <p className="text-[10px] font-black uppercase tracking-wide text-cyan-100/70">
             Street address
           </p>
-          <div className="mt-1.5 flex items-center gap-2">
-            <p className="text-sm font-black text-white">311 W University Dr</p>
-            <motion.span
-              animate={prefersReduced ? {} : { opacity: [1, 0, 1] }}
-              transition={{ duration: 0.85, repeat: Infinity }}
-              className="h-4 w-[2px] bg-cyan-300"
-            />
-          </div>
+          <p className="mt-1 text-sm font-black text-white">
+            311 W University Dr
+          </p>
         </div>
 
-        {/* Lookup indicator */}
-        <div className="mt-3 flex items-center gap-2">
-          <motion.div
-            animate={prefersReduced ? {} : { opacity: [0.3, 1, 0.3] }}
-            transition={{ duration: 1.6, repeat: Infinity }}
-            className="h-1.5 w-1.5 rounded-full bg-cyan-300"
-          />
-          <p className="text-[10px] text-cyan-300/55">Checking Street View...</p>
-        </div>
-
-        {/* Bottom action */}
-        <div className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-full bg-cyan-300/12 px-3 py-1.5 text-[10px] font-black text-cyan-300">
-          <Camera className="h-3 w-3" />
-          Find image
+        <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-cyan-300 px-4 py-2 text-xs font-black text-slate-950">
+          <Camera className="h-4 w-4" />
+          {label}
         </div>
       </div>
     );
@@ -125,72 +122,30 @@ function MockVisual({
 
   if (number === "02") {
     return (
-      <div className="relative h-36 p-3">
-        <div className="grid h-full grid-cols-2 gap-2">
-          {/* Street View option — active */}
-          <div className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-cyan-300/35 bg-cyan-300/8">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-300/18">
-              <Camera className="h-4 w-4 text-cyan-300" />
-            </div>
-            <p className="text-[9px] font-black text-cyan-300">Street View</p>
-            <p className="text-[8px] text-cyan-300/45">Auto-detected</p>
-          </div>
+      <div className="relative h-36 overflow-hidden rounded-2xl bg-linear-to-br from-slate-900 to-blue-950">
+        <div className="absolute inset-4 rounded-2xl border-2 border-dashed border-cyan-300/40" />
 
-          {/* Upload fallback — dimmed */}
-          <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-white/6 bg-white/3 opacity-50">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/8">
-              <Upload className="h-4 w-4 text-slate-500" />
-            </div>
-            <p className="text-[9px] font-black text-slate-500">Upload</p>
-            <p className="text-[8px] text-slate-600">If needed</p>
-          </div>
+        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
+          <Camera className="h-8 w-8 text-cyan-200" />
+          <p className="mt-2 text-xs font-black text-cyan-100">{label}</p>
         </div>
       </div>
     );
   }
 
-  // 03 — Flood preview mockup
   return (
-    <div className="relative h-36 overflow-hidden bg-[#060f1a]">
-      {/* Sky background */}
-      <div className="absolute inset-0 bg-linear-to-b from-slate-800/40 to-slate-900/60" />
-
-      {/* Water fill */}
+    <div className="relative h-36 overflow-hidden rounded-2xl bg-linear-to-br from-slate-900 to-blue-950">
       <motion.div
-        animate={
-          prefersReduced
-            ? { height: "26%" }
-            : { height: ["22%", "30%", "24%"] }
-        }
-        transition={{
-          duration: 3.2,
-          repeat: Infinity,
-          repeatType: "mirror",
-          ease: "easeInOut",
-        }}
-        className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-blue-900/95 via-blue-600/70 to-cyan-400/38"
+        animate={{ height: ["28%", "42%", "34%"] }}
+        transition={{ duration: 3.5, repeat: Infinity, repeatType: "mirror" }}
+        className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-blue-600/80 to-cyan-300/40"
       />
 
-      {/* Flood line indicator */}
-      <div
-        className="absolute left-0 right-0"
-        style={{ bottom: "24%" }}
-      >
-        <div className="h-px bg-cyan-300/40" />
-        <p className="absolute right-2 -top-[18px] text-[8px] font-black tracking-wider text-cyan-300/70">
-          FLOOD LINE
-        </p>
+      <div className="absolute left-5 top-5 rounded-full bg-white/10 px-3 py-1 text-xs font-black text-cyan-100">
+        {label}
       </div>
 
-      {/* Depth card */}
-      <div className="absolute left-3 top-3 rounded-xl bg-white/95 px-3 py-2 shadow-lg">
-        <p className="text-[8px] font-black uppercase tracking-wider text-blue-600">
-          Depth
-        </p>
-        <p className="text-xl font-black leading-none text-slate-900">2.4 ft</p>
-      </div>
-
-      <Waves className="absolute bottom-3 right-3 h-4 w-4 text-cyan-300/40" />
+      <Waves className="absolute bottom-5 right-5 h-8 w-8 text-cyan-100" />
     </div>
   );
 }

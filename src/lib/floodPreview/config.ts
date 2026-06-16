@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  import.meta.env.SERVER_BASE_URL || "http://192.168.56.1:8000";
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 export const IMAGE_DETECTION_API_URL = `${API_BASE_URL}/detect_reference`;
 
