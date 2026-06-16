@@ -68,20 +68,6 @@ export function UploadPage() {
     setGsvError(null);
   }
 
-  function isStreetViewUnavailableError(error: unknown) {
-    if (!(error instanceof Error)) return false;
-
-    const message = error.message.toLowerCase();
-
-    return (
-      message.includes("404") ||
-      message.includes("street view") ||
-      message.includes("no street") ||
-      message.includes("not found") ||
-      message.includes("zero_results")
-    );
-  }
-
   async function handleCheckAddress() {
     if (!addressIsComplete) return;
 
@@ -100,22 +86,24 @@ export function UploadPage() {
       sessionStorage.setItem("floodPreviewResult", JSON.stringify(result));
       navigate("/results");
     } catch (error) {
-      console.error(error);
+      const message =
+        error instanceof Error ? error.message : "Something went wrong.";
 
-      if (isStreetViewUnavailableError(error)) {
+      const shouldUseImageFallback =
+        message.toLowerCase().includes("no usable door") ||
+        message.toLowerCase().includes("garage door detected") ||
+        message.toLowerCase().includes("no street view") ||
+        message.toLowerCase().includes("street view image found") ||
+        message.toLowerCase().includes("404") ||
+        message.toLowerCase().includes("zero_results");
+
+      if (shouldUseImageFallback) {
         setGsvUnavailable(true);
-        setGsvError(
-          "We could not find a usable Street View image for this address. Upload a front-facing photo and we will still use the address for elevation data later.",
-        );
+        setGsvError(null);
         return;
       }
 
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Something went wrong checking the address.";
-
-      alert(message);
+      setGsvError(message);
     } finally {
       setCheckingAddress(false);
     }

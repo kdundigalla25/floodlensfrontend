@@ -1,4 +1,4 @@
-import { Home, Info, MapPin, ShieldAlert, Waves } from "lucide-react";
+import { Home, Info, MapPin, Waves } from "lucide-react";
 import { motion } from "framer-motion";
 import { ResultMetricCard } from "./ResultMetricCard";
 import type { FloodPreviewResult } from "../../lib/floodPreview";
@@ -40,13 +40,6 @@ export function ResultDetailsPanel({ result, address, imageSource }: Props) {
       <AddressPanel address={address} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-        <ResultMetricCard
-          icon={<ShieldAlert className="h-5 w-5" />}
-          label="Risk signal"
-          value="Moderate"
-          tone="rose"
-        />
-
         <ResultMetricCard
           icon={<Home className="h-5 w-5" />}
           label="Image source"

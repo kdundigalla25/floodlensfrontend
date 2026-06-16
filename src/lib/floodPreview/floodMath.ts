@@ -66,6 +66,8 @@ export function calculateFloodReachFromAddress({
     camAltitude,
   });
 
+  console.log(elevFFE);
+
   const floodAltitudeFromDoorBottom =
     PLACEHOLDER_FLOOD_ELEVATION_METERS - elevFFE;
 
