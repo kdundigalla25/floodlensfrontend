@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Waves } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   GroundLineStep,
@@ -31,14 +31,9 @@ export function UploadPage() {
 
   const [addressInput, setAddressInput] = useState<AddressInput>(() => {
     const saved = sessionStorage.getItem("homeAddressInput");
-
     return saved
       ? JSON.parse(saved)
-      : {
-          address: "",
-          city: "",
-          state: "",
-        };
+      : { address: "", city: "", state: "" };
   });
 
   const [groundLine, setGroundLine] = useState<GroundLine | null>(() => {
@@ -154,20 +149,16 @@ export function UploadPage() {
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="mb-10"
       >
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100">
-          <Waves className="h-4 w-4 text-cyan-300" />
-          Create your flood preview
-        </div>
-
         <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-6xl">
-          Start with the address. We’ll handle the image source.
+          Start with the address. We'll handle the image source.
         </h1>
 
-        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300 md:text-lg md:leading-8">
-          We first try Street View. If there is no usable image, upload your own
-          photo while keeping the address saved for road elevation.
+        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-400 md:text-lg">
+          We first try Street View. If there's no usable image, upload your own
+          photo while the address stays saved for road elevation.
         </p>
       </motion.div>
 
@@ -212,10 +203,19 @@ export function UploadPage() {
               whileTap={imageFlowIsComplete ? { scale: 0.98 } : undefined}
               onClick={handleGenerateFromImage}
               disabled={!imageFlowIsComplete}
-              className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-cyan-300 to-blue-500 px-6 py-4 text-base font-black text-slate-950 shadow-2xl shadow-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-40"
+              className="group inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-bold text-white shadow-2xl disabled:cursor-not-allowed disabled:opacity-40"
+              style={{
+                background: imageFlowIsComplete
+                  ? "linear-gradient(90deg, #22d3ee, #3b82f6)"
+                  : "rgba(255,255,255,0.08)",
+                boxShadow: imageFlowIsComplete
+                  ? "0 8px 30px rgba(34,211,238,0.25)"
+                  : "none",
+                transition: "box-shadow 0.2s",
+              }}
             >
               Generate from uploaded image
-              <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
+              <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
             </motion.button>
           )}
         </section>

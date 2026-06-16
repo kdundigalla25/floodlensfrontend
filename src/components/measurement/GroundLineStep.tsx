@@ -32,10 +32,8 @@ export function GroundLineStep({ imageUrl, groundLine, setGroundLine }: Props) {
 
   function getPointFromEvent(event: React.PointerEvent<HTMLDivElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
-
     const x = ((event.clientX - rect.left) / rect.width) * 100;
     const y = ((event.clientY - rect.top) / rect.height) * 100;
-
     return {
       x: Math.min(100, Math.max(0, x)),
       y: Math.min(100, Math.max(0, y)),
@@ -43,43 +41,27 @@ export function GroundLineStep({ imageUrl, groundLine, setGroundLine }: Props) {
   }
 
   function handleImagePointerDown(event: React.PointerEvent<HTMLDivElement>) {
-    if ((event.target as HTMLElement).closest("[data-ground-handle]")) {
-      return;
-    }
+    if ((event.target as HTMLElement).closest("[data-ground-handle]")) return;
 
     const point = getPointFromEvent(event);
 
     if (!groundLine) {
-      setGroundLine({
-        start: point,
-        end: point,
-      });
+      setGroundLine({ start: point, end: point });
       return;
     }
 
     if (!hasFullLine) {
-      setGroundLine({
-        start: groundLine.start,
-        end: point,
-      });
+      setGroundLine({ start: groundLine.start, end: point });
       return;
     }
 
-    setGroundLine({
-      start: point,
-      end: point,
-    });
+    setGroundLine({ start: point, end: point });
   }
 
   function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
     if (!draggingPoint || !groundLine) return;
-
     const point = getPointFromEvent(event);
-
-    setGroundLine({
-      ...groundLine,
-      [draggingPoint]: point,
-    });
+    setGroundLine({ ...groundLine, [draggingPoint]: point });
   }
 
   function stopDragging() {
@@ -92,7 +74,6 @@ export function GroundLineStep({ imageUrl, groundLine, setGroundLine }: Props) {
   ) {
     event.preventDefault();
     event.stopPropagation();
-
     event.currentTarget.setPointerCapture(event.pointerId);
     setDraggingPoint(pointName);
   }
@@ -102,24 +83,34 @@ export function GroundLineStep({ imageUrl, groundLine, setGroundLine }: Props) {
     sessionStorage.removeItem("groundLine");
   }
 
+  const hint = !groundLine
+    ? "Click the first ground point"
+    : hasFullLine
+      ? "Drag the points to adjust"
+      : "Click the second ground point";
+
   return (
     <motion.div
       layout
-      className="rounded-4xl border border-white/10 bg-[#132233]/90 p-5 shadow-2xl"
+      className="rounded-4xl border border-white/10 bg-[#0d1a2b] p-5 shadow-xl"
     >
-      <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-300/15 text-cyan-200">
-            <MapPin className="h-6 w-6" />
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+            style={{
+              background: "linear-gradient(135deg, #22d3ee, #3b82f6)",
+              boxShadow: "0 0 16px rgba(34,211,238,0.28)",
+            }}
+          >
+            <MapPin className="h-[18px] w-[18px] text-white" />
           </div>
 
           <div>
-            <h2 className="text-xl font-black text-white">
-              Mark the ground line
-            </h2>
-            <p className="mt-2 leading-7 text-slate-400">
-              Click two points along the base of the house where the ground
-              meets the structure. Then drag either point to fine-tune the line.
+            <h2 className="font-semibold text-white">Mark the ground line</h2>
+            <p className="text-sm text-slate-400">
+              Click two points where the structure meets the ground, then drag
+              to fine-tune.
             </p>
           </div>
         </div>
@@ -128,22 +119,15 @@ export function GroundLineStep({ imageUrl, groundLine, setGroundLine }: Props) {
           <button
             type="button"
             onClick={resetGroundLine}
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/15"
+            className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/10"
           >
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw className="h-3.5 w-3.5" />
             Reset
           </button>
         )}
       </div>
 
-      <div className="bottom-4 left-4 rounded-2xl bg-slate-950/80 px-4 py-3 text-sm font-bold text-white backdrop-blur-xl">
-        {!groundLine
-          ? "Click the first ground point"
-          : hasFullLine
-            ? "Drag the points to adjust the ground line"
-            : "Click the second ground point"}
-      </div>
-
+      {/* Canvas */}
       <div
         onPointerDown={handleImagePointerDown}
         onPointerMove={handlePointerMove}
@@ -167,7 +151,7 @@ export function GroundLineStep({ imageUrl, groundLine, setGroundLine }: Props) {
               x2={`${groundLine.end.x}%`}
               y2={`${groundLine.end.y}%`}
               stroke="rgb(103 232 249)"
-              strokeWidth="4"
+              strokeWidth="3"
               strokeLinecap="round"
               strokeDasharray={hasFullLine ? "none" : "8 8"}
             />
@@ -179,18 +163,22 @@ export function GroundLineStep({ imageUrl, groundLine, setGroundLine }: Props) {
             <GroundHandle
               point={groundLine.start}
               label="Start point"
-              onPointerDown={(event) => startDragging(event, "start")}
+              onPointerDown={(e) => startDragging(e, "start")}
               active={draggingPoint === "start"}
             />
-
             <GroundHandle
               point={groundLine.end}
               label="End point"
-              onPointerDown={(event) => startDragging(event, "end")}
+              onPointerDown={(e) => startDragging(e, "end")}
               active={draggingPoint === "end"}
             />
           </>
         )}
+
+        {/* Hint overlay — fixed inside the canvas */}
+        <div className="absolute bottom-4 left-4 rounded-xl bg-slate-950/80 px-3 py-2 text-xs font-semibold text-white backdrop-blur-xl">
+          {hint}
+        </div>
       </div>
     </motion.div>
   );
