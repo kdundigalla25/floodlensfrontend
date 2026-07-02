@@ -1,5 +1,3 @@
-import type { GroundLine } from "../../components/measurement/GroundLineStep";
-
 export type BoundingBox = {
   x1: number;
   y1: number;
@@ -20,27 +18,39 @@ export type BackendDetectionResponse = {
   altitude: number;
 };
 
-export type GenerateImagePreviewInput = {
-  imageUrl: string;
-  groundLine: GroundLine;
-  imageFile: File;
-  address: string;
-};
-
 export type GenerateAddressPreviewInput = {
   address: string;
 };
 
+// A Street View detection plus its loaded image, held for user confirmation
+// before the flood result is computed.
+export type AddressDetection = {
+  detection: BackendDetectionResponse;
+  imageUrl: string;
+  imageWidth: number;
+  imageHeight: number;
+};
+
+export type GenerateCoordsPreviewInput = {
+  imageUrl: string;
+  imageFile: File;
+  address: string;
+  lat: number;
+  lng: number;
+};
+
+export type FloodImageSource = "streetview" | "upload";
+
 export type FloodPreviewResult = {
   imageUrl: string;
-  groundLine: GroundLine | null;
+  source: FloodImageSource;
   address: string;
+
+  latitude?: number;
+  longitude?: number;
 
   imageWidth: number;
   imageHeight: number;
-
-  groundMidpointYPixels: number | null;
-  groundMidpointYPercent: number | null;
 
   floodLineYPixels: number;
   floodLineYPercent: number;

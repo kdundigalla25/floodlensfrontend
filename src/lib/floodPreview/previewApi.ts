@@ -1,23 +1,8 @@
-import { ADDRESS_DETECTION_API_URL, IMAGE_DETECTION_API_URL } from "./config";
+import {
+  ADDRESS_DETECTION_API_URL,
+  COORDS_DETECTION_API_URL,
+} from "./config";
 import type { BackendDetectionResponse } from "./types";
-
-export async function fetchPixelDataFromImage(
-  imageFile: File,
-): Promise<BackendDetectionResponse> {
-  const formData = new FormData();
-  formData.append("file", imageFile);
-
-  const response = await fetch(IMAGE_DETECTION_API_URL, {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!response.ok) {
-    throw new Error(`Image detection failed with status ${response.status}`);
-  }
-
-  return response.json();
-}
 
 export async function fetchPixelDataFromAddress(
   address: string,
@@ -32,6 +17,28 @@ export async function fetchPixelDataFromAddress(
 
   if (!response.ok) {
     throw new Error(`Address detection failed with status ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export async function fetchPixelDataFromCoords(
+  imageFile: File,
+  lat: number,
+  lng: number,
+): Promise<BackendDetectionResponse> {
+  const formData = new FormData();
+  formData.append("file", imageFile);
+  formData.append("latitude", String(lat));
+  formData.append("longitude", String(lng));
+
+  const response = await fetch(COORDS_DETECTION_API_URL, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Coordinate detection failed with status ${response.status}`);
   }
 
   return response.json();

@@ -8,6 +8,9 @@ type Props = {
   addressIsComplete: boolean;
   checkingAddress: boolean;
   onCheckAddress: () => void;
+  // "check" shows the Street View lookup button; "entry" is a plain address
+  // form for the photo path, where the address is only saved for elevation.
+  variant?: "check" | "entry";
 };
 
 export function AddressLookupCard({
@@ -16,6 +19,7 @@ export function AddressLookupCard({
   addressIsComplete,
   checkingAddress,
   onCheckAddress,
+  variant = "check",
 }: Props) {
   function updateAddressField(field: keyof AddressInput, value: string) {
     setAddressInput({
@@ -40,14 +44,15 @@ export function AddressLookupCard({
 
           <div>
             <p className="text-sm font-black uppercase tracking-wide text-cyan-100/70">
-              Step 1
+              {variant === "check" ? "Street View" : "For elevation"}
             </p>
             <h2 className="mt-1 text-2xl font-black text-white">
               Enter the home address
             </h2>
             <p className="mt-2 max-w-2xl leading-7 text-slate-300">
-              We’ll first try to use a Google Street View image. If it fails,
-              the address still stays saved for road altitude and elevation.
+              {variant === "check"
+                ? "We’ll first try to use a Google Street View image. If it fails, the address still stays saved for road altitude and elevation."
+                : "We keep this address to look up road altitude and elevation for your uploaded photo."}
             </p>
           </div>
         </div>
@@ -79,22 +84,24 @@ export function AddressLookupCard({
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={onCheckAddress}
-          disabled={!addressIsComplete || checkingAddress}
-          className="group mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 font-black text-slate-950 shadow-xl transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40 md:w-auto"
-        >
-          {checkingAddress ? (
-            "Checking Street View..."
-          ) : (
-            <>
-              <Search className="h-5 w-5 text-blue-600" />
-              Check for Street View
-              <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
-            </>
-          )}
-        </button>
+        {variant === "check" && (
+          <button
+            type="button"
+            onClick={onCheckAddress}
+            disabled={!addressIsComplete || checkingAddress}
+            className="group mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 font-black text-slate-950 shadow-xl transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40 md:w-auto"
+          >
+            {checkingAddress ? (
+              "Checking Street View..."
+            ) : (
+              <>
+                <Search className="h-5 w-5 text-blue-600" />
+                Check for Street View
+                <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
+              </>
+            )}
+          </button>
+        )}
       </div>
     </motion.section>
   );

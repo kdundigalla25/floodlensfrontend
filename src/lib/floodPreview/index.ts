@@ -1,71 +1,32 @@
-import {
-  calculateFloodReachFromAddress,
-  calculateFloodReachFromGroundLine,
-} from "./floodMath";
+import { calculateFloodReachFromAddress } from "./floodMath";
 import { getImageDimensions } from "./imageUtils";
 import {
   fetchPixelDataFromAddress,
-  fetchPixelDataFromImage,
+  fetchPixelDataFromCoords,
   getImageUrlFromAddressResponse,
 } from "./previewApi";
 import type {
+  AddressDetection,
   FloodPreviewResult,
   GenerateAddressPreviewInput,
-  GenerateImagePreviewInput,
+  GenerateCoordsPreviewInput,
 } from "./types";
 
-export async function generateFloodPreviewFromImage({
+export async function generateFloodPreviewFromCoords({
   imageUrl,
-  groundLine,
   imageFile,
   address,
-}: GenerateImagePreviewInput): Promise<FloodPreviewResult> {
+  lat,
+  lng,
+}: GenerateCoordsPreviewInput): Promise<FloodPreviewResult> {
   const { width: imageWidth, height: imageHeight } =
     await getImageDimensions(imageUrl);
 
-  const detection = await fetchPixelDataFromImage(imageFile);
+  const detection = await fetchPixelDataFromCoords(imageFile, lat, lng);
 
   if (!detection.reference_type || !detection.pixel_height || !detection.box) {
-    throw new Error("No usable door or garage door detected.");
+    throw new Error("No usable door or garage door detected in the photo.");
   }
-
-  const groundMidpointYPercent = (groundLine.start.y + groundLine.end.y) / 2;
-  const groundMidpointYPixels = (groundMidpointYPercent / 100) * imageHeight;
-
-  const floodCalculation = calculateFloodReachFromGroundLine({
-    imageHeight,
-    groundMidpointYPixels,
-    referenceType: detection.reference_type,
-    referencePixelHeight: detection.pixel_height,
-  });
-
-  return {
-    imageUrl,
-    groundLine,
-    address,
-    imageWidth,
-    imageHeight,
-    groundMidpointYPixels,
-    groundMidpointYPercent,
-    referenceType: detection.reference_type,
-    referenceBox: detection.box,
-    ...floodCalculation,
-  };
-}
-
-export async function generateFloodPreviewFromAddress({
-  address,
-}: GenerateAddressPreviewInput): Promise<FloodPreviewResult> {
-  const detection = await fetchPixelDataFromAddress(address);
-
-  if (!detection.reference_type || !detection.pixel_height || !detection.box) {
-    throw new Error("No usable door or garage door detected from address.");
-  }
-
-  const imageUrl = getImageUrlFromAddressResponse(detection);
-
-  const { width: imageWidth, height: imageHeight } =
-    await getImageDimensions(imageUrl);
 
   const floodCalculation = calculateFloodReachFromAddress({
     imageHeight,
@@ -78,12 +39,64 @@ export async function generateFloodPreviewFromAddress({
 
   return {
     imageUrl,
-    groundLine: null,
+    source: "upload",
+    address,
+    latitude: lat,
+    longitude: lng,
+    imageWidth,
+    imageHeight,
+    referenceType: detection.reference_type,
+    referenceBox: detection.box,
+    floodHeightFeet: null,
+    floodHeightPixels: null,
+    ...floodCalculation,
+  };
+}
+
+/**
+ * Fetches the Street View detection for an address and loads the image, but
+ * stops short of computing the flood result. This lets the UI show the image
+ * and detected door box for the user to confirm before we commit to a preview.
+ */
+export async function fetchAddressDetection({
+  address,
+}: GenerateAddressPreviewInput): Promise<AddressDetection> {
+  const detection = await fetchPixelDataFromAddress(address);
+
+  if (!detection.reference_type || !detection.pixel_height || !detection.box) {
+    throw new Error("No usable door or garage door detected from address.");
+  }
+
+  const imageUrl = getImageUrlFromAddressResponse(detection);
+
+  const { width: imageWidth, height: imageHeight } =
+    await getImageDimensions(imageUrl);
+
+  return { detection, imageUrl, imageWidth, imageHeight };
+}
+
+/**
+ * Computes the flood preview from a detection the user has already confirmed.
+ */
+export function buildAddressFloodResult(
+  address: string,
+  { detection, imageUrl, imageWidth, imageHeight }: AddressDetection,
+): FloodPreviewResult {
+  const floodCalculation = calculateFloodReachFromAddress({
+    imageHeight,
+    imageWidth,
+    referenceType: detection.reference_type,
+    referencePixelHeight: detection.pixel_height,
+    referenceBox: detection.box!,
+    camAltitude: detection.altitude,
+  });
+
+  return {
+    imageUrl,
+    source: "streetview",
     address,
     imageWidth,
     imageHeight,
-    groundMidpointYPixels: null,
-    groundMidpointYPercent: null,
     referenceType: detection.reference_type,
     referenceBox: detection.box,
     floodHeightFeet: null,
@@ -96,7 +109,9 @@ export type {
   BoundingBox,
   ReferenceType,
   BackendDetectionResponse,
-  GenerateImagePreviewInput,
+  AddressDetection,
   GenerateAddressPreviewInput,
+  GenerateCoordsPreviewInput,
+  FloodImageSource,
   FloodPreviewResult,
 } from "./types";

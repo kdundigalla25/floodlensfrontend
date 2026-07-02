@@ -19,7 +19,8 @@ export function ResultsPage() {
     sessionStorage.getItem("homeFullAddress") ||
     "Address unavailable";
 
-  const imageSource = result.groundLine ? "Uploaded photo" : "Street View";
+  const imageSource =
+    result.source === "upload" ? "Uploaded photo" : "Street View";
 
   return (
     <main className="relative mx-auto max-w-7xl px-5 py-28 md:px-8">
