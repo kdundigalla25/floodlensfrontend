@@ -36,9 +36,8 @@ export function PhotoDropzone({ imageUrl, setImageUrl, setImageFile }: Props) {
       layout
       className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-slate-950/35 p-3 shadow-xl"
     >
-      <label className="group relative flex min-h-90 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl border border-dashed border-cyan-200/30 bg-linear-to-br from-slate-950 via-slate-900 to-blue-950 p-6 text-center transition hover:border-cyan-200/80">
+      <label className="group relative isolate flex min-h-90 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl border border-dashed border-cyan-200/30 bg-linear-to-br from-slate-950 via-slate-900 to-blue-950 p-6 text-center transition hover:border-cyan-200/80">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(103,232,249,0.18),transparent_38%)] opacity-70 transition group-hover:opacity-100" />
-        <div className="absolute -bottom-24 left-1/2 h-52 w-52 -translate-x-1/2 rounded-full bg-blue-500/20 blur-3xl" />
 
         {imageUrl ? (
           <>

@@ -52,18 +52,12 @@ export function PhotoFallbackCard({
       initial={{ opacity: 0, y: 22, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.35 }}
-      className={`relative overflow-hidden rounded-4xl border p-6 shadow-2xl ${
+      className={`relative isolate overflow-hidden rounded-4xl border p-6 shadow-2xl ${
         isWarning
           ? "border-amber-200/20 bg-linear-to-br from-amber-300/15 via-rose-400/10 to-[#0d1a2b]"
           : "border-cyan-300/20 bg-linear-to-br from-cyan-300/15 via-blue-500/10 to-[#0d1a2b]"
       }`}
     >
-      <div
-        className={`absolute -right-20 -top-24 h-56 w-56 rounded-full blur-3xl ${
-          isWarning ? "bg-amber-300/20" : "bg-cyan-300/20"
-        }`}
-      />
-
       <div className="relative mb-6 flex items-start gap-4">
         <div
           className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl shadow-xl ${

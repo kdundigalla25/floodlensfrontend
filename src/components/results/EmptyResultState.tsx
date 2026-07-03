@@ -1,28 +1,48 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowRight, Waves } from "lucide-react";
+import { motion } from "framer-motion";
+import { WaveBand } from "../common/WaveBand";
 
 export function EmptyResultState() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl items-center px-6 py-28">
-      <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-[#101d30] p-8 shadow-2xl">
-        <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/15 blur-3xl" />
+    <main className="mx-auto flex min-h-[100dvh] max-w-3xl items-center px-6 pb-24 pt-32">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+        className="relative isolate w-full overflow-hidden rounded-[2rem] border border-white/10 bg-tide p-8 shadow-2xl md:p-10"
+      >
 
         <div className="relative">
-          <h1 className="text-3xl font-black text-white">No preview found</h1>
+          <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-300/15 text-cyan-200">
+            <Waves className="h-7 w-7" />
+          </div>
 
-          <p className="mt-3 leading-7 text-slate-400">
-            Go back to the upload page and generate a flood preview first.
+          <h1 className="text-3xl font-bold text-white md:text-4xl">
+            No preview yet
+          </h1>
+
+          <p className="mt-3 max-w-md leading-7 text-slate-400">
+            Start from an address or a photo and we will generate a flood
+            waterline for your home.
           </p>
 
           <Link
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 font-black text-slate-950"
             to="/upload"
+            className="group mt-7 inline-flex items-center gap-2 rounded-full bg-linear-to-r from-cyan-300 to-blue-500 px-6 py-3.5 font-bold text-slate-950 shadow-lg shadow-cyan-500/25 transition hover:scale-[1.03] active:scale-[0.98]"
           >
-            <ArrowLeft className="h-4 w-4 text-blue-600" />
-            Back to upload
+            Check my home
+            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
           </Link>
         </div>
-      </div>
+
+        <WaveBand
+          className="absolute inset-x-0 bottom-0 w-full opacity-60"
+          fill="#0e6ea3"
+          height={70}
+          seconds={16}
+        />
+      </motion.div>
     </main>
   );
 }

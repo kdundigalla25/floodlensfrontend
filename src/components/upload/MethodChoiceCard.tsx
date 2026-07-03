@@ -13,9 +13,8 @@ export function MethodChoiceCard({ onChoose }: Props) {
       layout
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden rounded-4xl border border-white/10 bg-linear-to-br from-cyan-300/15 via-blue-500/10 to-[#0d1a2b] p-6 shadow-2xl"
+      className="relative isolate overflow-hidden rounded-4xl border border-white/10 bg-linear-to-br from-cyan-300/15 via-blue-500/10 to-[#0d1a2b] p-6 shadow-2xl"
     >
-      <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
 
       <div className="relative">
         <p className="text-sm font-black uppercase tracking-wide text-cyan-100/70">

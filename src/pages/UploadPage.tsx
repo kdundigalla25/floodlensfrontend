@@ -167,18 +167,19 @@ export function UploadPage() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-5 py-28 md:px-8">
+    <main className="mx-auto max-w-7xl px-5 pb-28 pt-32 md:px-8">
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="mb-10"
       >
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100">
           <Waves className="h-4 w-4 text-cyan-300" />
           Create your flood preview
         </div>
 
-        <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-6xl">
+        <h1 className="max-w-4xl text-4xl font-bold leading-[1.02] text-white md:text-5xl lg:text-6xl">
           Start with your address or your own photo.
         </h1>
 

@@ -55,9 +55,7 @@ export function UploadProgressPanel({
         : "Pick a starting point to begin.";
 
   return (
-    <aside className="relative overflow-hidden rounded-4xl border border-white/10 bg-[#0d1a2b] p-5 shadow-2xl">
-      <div className="absolute -left-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/10 blur-3xl" />
-      <div className="absolute -bottom-24 right-0 h-56 w-56 rounded-full bg-blue-600/10 blur-3xl" />
+    <aside className="relative isolate overflow-hidden rounded-4xl border border-white/10 bg-[#0d1a2b] p-5 shadow-2xl">
 
       <div className="relative mb-6">
         <p className="text-sm font-black uppercase tracking-wide text-cyan-100/60">

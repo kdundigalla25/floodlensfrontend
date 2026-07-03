@@ -1,4 +1,16 @@
 @import "tailwindcss";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/inter";
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk Variable", "Inter Variable", sans-serif;
+
+  /* Water palette — the single locked accent family for the whole app. */
+  --color-abyss: #050c17;
+  --color-deep: #07111f;
+  --color-tide: #0c1a2c;
+}
 
 html,
 body,
@@ -12,9 +24,37 @@ body,
 
 body {
   min-width: 320px;
-  background: #07111f;
+  background: var(--color-deep);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display font drives every heading, so the type system stays cohesive across
+   the landing page, the upload flow, and the results view. */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* Reusable water-surface drift used by the section wave motifs. */
+@keyframes tide-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tide-drift {
+    animation: none !important;
+  }
 }

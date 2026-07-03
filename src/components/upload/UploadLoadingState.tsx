@@ -9,9 +9,7 @@ export function UploadLoadingState({ mode }: Props) {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-5">
-      <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-[#111f33]/95 p-8 text-center shadow-2xl">
-        <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-cyan-300/20 blur-3xl" />
-        <div className="absolute -bottom-20 left-10 h-44 w-44 rounded-full bg-blue-600/20 blur-3xl" />
+      <div className="relative isolate overflow-hidden rounded-4xl border border-white/10 bg-[#111f33]/95 p-8 text-center shadow-2xl">
 
         <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-300/10 text-cyan-200">
           {checking ? (

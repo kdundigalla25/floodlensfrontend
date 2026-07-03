@@ -31,10 +31,8 @@ export function AddressLookupCard({
   return (
     <motion.section
       layout
-      className="relative overflow-hidden rounded-4xl border border-white/10 bg-linear-to-br from-cyan-300/15 via-blue-500/10 to-[#0d1a2b] p-6 shadow-2xl"
+      className="relative isolate overflow-hidden rounded-4xl border border-white/10 bg-linear-to-br from-cyan-300/15 via-blue-500/10 to-[#0d1a2b] p-6 shadow-2xl"
     >
-      <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
-      <div className="absolute -bottom-24 left-12 h-56 w-56 rounded-full bg-blue-600/20 blur-3xl" />
 
       <div className="relative">
         <div className="mb-6 flex items-start gap-4">

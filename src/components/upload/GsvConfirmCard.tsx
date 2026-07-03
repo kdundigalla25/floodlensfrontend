@@ -43,9 +43,8 @@ export function GsvConfirmCard({
       initial={{ opacity: 0, y: 22, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.35 }}
-      className="relative overflow-hidden rounded-4xl border border-white/10 bg-[#132233]/90 p-6 shadow-2xl"
+      className="relative isolate overflow-hidden rounded-4xl border border-white/10 bg-[#132233]/90 p-6 shadow-2xl"
     >
-      <div className="absolute -right-20 -top-24 h-56 w-56 rounded-full bg-cyan-300/15 blur-3xl" />
 
       <div className="relative mb-5 flex items-start gap-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-300/15 text-cyan-200">
