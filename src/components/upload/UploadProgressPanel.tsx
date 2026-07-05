@@ -67,7 +67,7 @@ export function UploadProgressPanel({
 
       <div className="relative grid gap-3">
         {steps.map((step) => (
-          <ProgressStep key={step.key} {...step} />
+          <ProgressStep {...step} key={step.key} />
         ))}
       </div>
     </aside>
