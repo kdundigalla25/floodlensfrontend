@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Waves } from "lucide-react";
+import { ArrowLeft, ArrowRight, Camera, Waves } from "lucide-react";
 import { motion } from "framer-motion";
 import { LocationStep } from "../components/measurement/LocationStep";
 import type { Coordinates } from "../lib/floodPreview/exif";
@@ -21,6 +21,7 @@ import {
   type PhotoReason,
 } from "../components/upload/PhotoFallbackCard";
 import { UploadLoadingState } from "../components/upload/UploadLoadingState";
+import { UploadGuide } from "../components/upload/guide/UploadGuide";
 import { UploadProgressPanel } from "../components/upload/UploadProgressPanel";
 import {
   getFullAddress,
@@ -43,6 +44,12 @@ export function UploadPage() {
   const navigate = useNavigate();
 
   const [method, setMethod] = useState<FlowMethod>("choose");
+
+  // The photo guide leads the flow, but only until it has been read once —
+  // returning within the same session drops straight into the method choice.
+  const [showGuide, setShowGuide] = useState(
+    () => !sessionStorage.getItem("uploadGuideSeen"),
+  );
 
   const [imageUrl, setImageUrl] = useState<string | null>(
     sessionStorage.getItem("houseImageUrl"),
@@ -81,6 +88,11 @@ export function UploadPage() {
     // Any prior lookup is stale once the address changes.
     setGsvDetection(null);
     setGsvError(null);
+  }
+
+  function dismissGuide() {
+    sessionStorage.setItem("uploadGuideSeen", "1");
+    setShowGuide(false);
   }
 
   function goToPhoto(reason: PhotoReason) {
@@ -166,6 +178,10 @@ export function UploadPage() {
     return <UploadLoadingState mode="generating-preview" />;
   }
 
+  if (showGuide) {
+    return <UploadGuide onContinue={dismissGuide} />;
+  }
+
   return (
     <main className="mx-auto max-w-7xl px-5 pb-28 pt-32 md:px-8">
       <motion.div
@@ -187,6 +203,15 @@ export function UploadPage() {
           Try Street View from an address, or upload a front-facing photo. The
           address is always saved for road elevation.
         </p>
+
+        <button
+          type="button"
+          onClick={() => setShowGuide(true)}
+          className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/6 px-4 py-2 text-sm font-bold text-slate-300 transition hover:border-cyan-300/40 hover:text-white"
+        >
+          <Camera className="h-4 w-4 text-cyan-300" />
+          Photo tips
+        </button>
       </motion.div>
 
       <div className="grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">

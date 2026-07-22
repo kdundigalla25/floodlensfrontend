@@ -67,8 +67,9 @@ export function PhotoDropzone({ imageUrl, setImageUrl, setImageFile }: Props) {
             </p>
 
             <p className="mt-3 max-w-md leading-7 text-slate-400">
-              Use a clear front-facing image. After uploading, we’ll confirm
-              where the photo was taken.
+              Use a clear front-facing image with the front door fully visible —
+              a garage door works if the front door isn’t reachable. After
+              uploading, we’ll confirm where the photo was taken.
             </p>
 
             <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-cyan-100">
